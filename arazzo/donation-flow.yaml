@@ -1,0 +1,30 @@
+arazzo: 1.0.1
+info:
+  title: Donation Flow
+  version: 0.1.0
+sourceDescriptions:
+  - name: openpayments
+    url: ../examples/valid/openpayments-gnap.yaml
+    type: openapi
+workflows:
+  - workflowId: donationFlow
+    description: A compact payer-to-recipient donation flow using the Open Payments example operations.
+    steps:
+      - stepId: discoverRecipientWalletAddress
+        operationId: discoverWalletAddress
+        successCriteria:
+          - condition: $statusCode == 200
+      - stepId: requestDonationGrant
+        description: Request outgoing-payment and quote access for a bounded donation amount.
+      - stepId: createDonationQuote
+        operationId: createQuote
+        requestBody:
+          $ref: ../fixtures/payments/create-quote.request.json
+        successCriteria:
+          - condition: $statusCode == 201
+      - stepId: createDonationPayment
+        operationId: createOutgoingPayment
+        requestBody:
+          $ref: ../fixtures/payments/create-outgoing-payment.request.json
+        successCriteria:
+          - condition: $statusCode == 201

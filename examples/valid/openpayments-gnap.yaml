@@ -1,0 +1,113 @@
+openapi: 3.1.0
+info:
+  title: Open Payments GNAP Reference API
+  version: 0.1.0
+servers:
+  - url: https://resource.wallet.example
+components:
+  securitySchemes:
+    openPaymentsGNAP:
+      type: http
+      scheme: bearer
+      description: GNAP-issued access token for Open Payments resources.
+      x-gnap:
+        grantEndpoint: https://auth.wallet.example
+        supportsInteraction: true
+        supportsContinuation: true
+        proof:
+          method: httpsig
+          alg: ed25519
+paths:
+  /.well-known/pay/{walletId}:
+    get:
+      operationId: discoverWalletAddress
+      summary: Discover a wallet address.
+      parameters:
+        - name: walletId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Wallet address metadata.
+  /incoming-payments:
+    post:
+      operationId: createIncomingPayment
+      summary: Create an incoming payment.
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: incoming-payment
+        actions:
+          - create
+          - read
+      responses:
+        "201":
+          description: Incoming payment created.
+  /incoming-payments/{id}:
+    get:
+      operationId: readIncomingPayment
+      summary: Read an incoming payment.
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: incoming-payment
+        actions:
+          - read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Incoming payment state.
+  /quotes:
+    post:
+      operationId: createQuote
+      summary: Create a quote for a payment.
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: quote
+        actions:
+          - create
+          - read
+      responses:
+        "201":
+          description: Quote created.
+  /outgoing-payments:
+    post:
+      operationId: createOutgoingPayment
+      summary: Create an outgoing payment.
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: outgoing-payment
+        actions:
+          - create
+          - read
+      responses:
+        "201":
+          description: Outgoing payment created.
+  /outgoing-payments/{id}:
+    get:
+      operationId: readOutgoingPayment
+      summary: Read outgoing payment status.
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: outgoing-payment
+        actions:
+          - read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Outgoing payment state.

@@ -1,0 +1,27 @@
+openapi: 3.1.0
+info:
+  title: Invalid Access Type Example
+  version: 0.1.0
+components:
+  securitySchemes:
+    openPaymentsGNAP:
+      type: http
+      scheme: bearer
+      x-gnap:
+        grantEndpoint: https://auth.wallet.example
+        proof:
+          method: httpsig
+          alg: ed25519
+paths:
+  /outgoing-payments:
+    post:
+      operationId: createOutgoingPayment
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: payment
+        actions:
+          - create
+      responses:
+        "201":
+          description: Outgoing payment created.

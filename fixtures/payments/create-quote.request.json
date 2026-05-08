@@ -1,0 +1,9 @@
+{
+  "walletAddress": "https://wallet.example/alice",
+  "receiver": "https://resource.wallet.example/incoming-payments/local-fixture",
+  "debitAmount": {
+    "value": "2500",
+    "assetCode": "USD",
+    "assetScale": 2
+  }
+}

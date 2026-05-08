@@ -1,0 +1,26 @@
+arazzo: 1.0.1
+info:
+  title: Incoming Payment Flow
+  version: 0.1.0
+sourceDescriptions:
+  - name: openpayments
+    url: ../examples/valid/openpayments-gnap.yaml
+    type: openapi
+workflows:
+  - workflowId: incomingPaymentFlow
+    description: Request GNAP access and create an incoming payment.
+    steps:
+      - stepId: requestIncomingPaymentGrant
+        description: Request incoming-payment access from the GNAP authorization server.
+      - stepId: handleInteractionIfRequired
+        description: Continue after redirect-based interaction when the authorization server requires it.
+      - stepId: createIncomingPayment
+        operationId: createIncomingPayment
+        requestBody:
+          $ref: ../fixtures/payments/create-incoming-payment.request.json
+        successCriteria:
+          - condition: $statusCode == 201
+      - stepId: readIncomingPayment
+        operationId: readIncomingPayment
+        successCriteria:
+          - condition: $statusCode == 200

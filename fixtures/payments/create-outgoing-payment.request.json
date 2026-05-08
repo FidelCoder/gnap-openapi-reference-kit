@@ -1,0 +1,7 @@
+{
+  "walletAddress": "https://wallet.example/alice",
+  "quoteId": "https://resource.wallet.example/quotes/local-fixture",
+  "metadata": {
+    "reference": "local-fixture-outgoing-payment"
+  }
+}

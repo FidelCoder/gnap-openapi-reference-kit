@@ -1,0 +1,36 @@
+arazzo: 1.0.1
+info:
+  title: Outgoing Payment Flow
+  version: 0.1.0
+sourceDescriptions:
+  - name: openpayments
+    url: ../examples/valid/openpayments-gnap.yaml
+    type: openapi
+workflows:
+  - workflowId: outgoingPaymentFlow
+    description: Discover a wallet address, request GNAP access, quote, pay, and read status.
+    steps:
+      - stepId: discoverWalletAddress
+        operationId: discoverWalletAddress
+        successCriteria:
+          - condition: $statusCode == 200
+      - stepId: requestOutgoingPaymentGrant
+        description: Request outgoing-payment and quote access from the GNAP authorization server.
+      - stepId: handleInteractionOrContinuation
+        description: Complete interaction and continuation if the authorization server requires it.
+      - stepId: createQuote
+        operationId: createQuote
+        requestBody:
+          $ref: ../fixtures/payments/create-quote.request.json
+        successCriteria:
+          - condition: $statusCode == 201
+      - stepId: createOutgoingPayment
+        operationId: createOutgoingPayment
+        requestBody:
+          $ref: ../fixtures/payments/create-outgoing-payment.request.json
+        successCriteria:
+          - condition: $statusCode == 201
+      - stepId: readOutgoingPayment
+        operationId: readOutgoingPayment
+        successCriteria:
+          - condition: $statusCode == 200

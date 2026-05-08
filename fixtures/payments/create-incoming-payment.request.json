@@ -1,0 +1,11 @@
+{
+  "walletAddress": "https://wallet.example/alice",
+  "incomingAmount": {
+    "value": "2500",
+    "assetCode": "USD",
+    "assetScale": 2
+  },
+  "metadata": {
+    "reference": "local-fixture-incoming-payment"
+  }
+}

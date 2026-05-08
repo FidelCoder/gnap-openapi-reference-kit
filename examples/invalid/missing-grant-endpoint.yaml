@@ -1,0 +1,27 @@
+openapi: 3.1.0
+info:
+  title: Missing Grant Endpoint Example
+  version: 0.1.0
+components:
+  securitySchemes:
+    openPaymentsGNAP:
+      type: http
+      scheme: bearer
+      x-gnap:
+        supportsInteraction: true
+        proof:
+          method: httpsig
+          alg: ed25519
+paths:
+  /incoming-payments:
+    post:
+      operationId: createIncomingPayment
+      security:
+        - openPaymentsGNAP: []
+      x-gnap-access:
+        type: incoming-payment
+        actions:
+          - create
+      responses:
+        "201":
+          description: Incoming payment created.

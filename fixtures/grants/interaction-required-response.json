@@ -1,0 +1,12 @@
+{
+  "interact": {
+    "redirect": "https://auth.wallet.example/interact/local-fixture",
+    "finish": "local-fixture-finish-token"
+  },
+  "continue": {
+    "access_token": {
+      "value": "local-fixture-continuation-token"
+    },
+    "uri": "https://auth.wallet.example/continue/local-fixture"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "access_token": {
+    "value": "local-fixture-access-token",
+    "manage": "https://auth.wallet.example/token/local-fixture",
+    "access": [
+      {
+        "type": "outgoing-payment",
+        "actions": ["create", "read"],
+        "locations": ["https://resource.wallet.example"]
+      }
+    ]
+  },
+  "continue": {
+    "uri": "https://auth.wallet.example/continue/local-fixture",
+    "access_token": {
+      "value": "local-fixture-continuation-token"
+    }
+  }
+}

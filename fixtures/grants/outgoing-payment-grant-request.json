@@ -1,0 +1,25 @@
+{
+  "access_token": {
+    "access": [
+      {
+        "type": "outgoing-payment",
+        "actions": ["create", "read"],
+        "locations": ["https://resource.wallet.example"]
+      },
+      {
+        "type": "quote",
+        "actions": ["create", "read"],
+        "locations": ["https://resource.wallet.example"]
+      }
+    ]
+  },
+  "client": "https://client.example",
+  "interact": {
+    "start": ["redirect"],
+    "finish": {
+      "method": "redirect",
+      "uri": "https://client.example/callback",
+      "nonce": "local-fixture-nonce"
+    }
+  }
+}
