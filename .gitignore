@@ -3,3 +3,5 @@ dist/
 coverage/
 .vitest/
 *.log
+.env
+examples/live-open-payments/.env

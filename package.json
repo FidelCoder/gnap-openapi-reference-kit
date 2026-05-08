@@ -8,13 +8,18 @@
     "gnap-openapi": "./dist/cli.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tsc -p examples/live-open-payments/tsconfig.json --noEmit",
     "test": "vitest run",
     "validate:example": "tsx src/cli.ts validate examples/valid/openpayments-gnap.yaml",
-    "gnap-openapi": "tsx src/cli.ts"
+    "gnap-openapi": "tsx src/cli.ts",
+    "live:inspect-wallet": "tsx examples/live-open-payments/src/inspect-wallet-address.ts",
+    "live:create-incoming-payment": "tsx examples/live-open-payments/src/create-incoming-payment.ts",
+    "live:send-testnet-payment": "tsx examples/live-open-payments/src/send-testnet-payment.ts"
   },
   "dependencies": {
+    "@interledger/open-payments": "^7.4.0",
     "commander": "^12.1.0",
+    "dotenv": "^17.4.2",
     "yaml": "^2.6.1",
     "zod": "^3.24.1"
   },

@@ -127,6 +127,14 @@ The Open Payments examples use placeholder URLs only:
 
 Fixtures are illustrative, local-only JSON files. They are useful for documentation and tests, but they are not executable payment instructions and contain no real secrets.
 
+## Optional Live Open Payments Testnet Examples
+
+The core validator is deterministic and local-only. It does not make network calls, require wallet credentials, or use live Open Payments APIs.
+
+An optional live testnet layer is available under [`examples/live-open-payments`](examples/live-open-payments/README.md). It uses real Open Payments APIs against Interledger Test Wallet play-money accounts to demonstrate wallet address discovery, GNAP grants, incoming payments, quotes, interactive outgoing-payment approval, grant continuation, and outgoing payment creation.
+
+These live examples are testnet-only and play-money-only. They are not production payment instructions, do not handle real funds, and do not run during normal tests.
+
 ## Documentation
 
 - [GNAP OpenAPI extension vocabulary](docs/gnap-openapi-extension-vocabulary.md)
