@@ -1,0 +1,61 @@
+name: Live testnet report
+description: Report an optional Interledger Test Wallet dry-run or live-run result.
+title: "[live-testnet]: "
+labels:
+  - live-testnet
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste private keys, access tokens, continuation tokens, real credentials, or production payment information. Testnet/play-money output only.
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command
+      options:
+        - pnpm live:check-account
+        - pnpm live:inspect-wallet
+        - pnpm live:create-incoming-payment
+        - pnpm live:send-testnet-payment
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Mode
+      options:
+        - DRY_RUN=true
+        - DRY_RUN=false
+    validations:
+      required: true
+  - type: textarea
+    id: redacted-output
+    attributes:
+      label: Redacted terminal output
+      description: Paste output after removing private material.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: ids
+    attributes:
+      label: Testnet IDs returned, if any
+      description: Include incoming payment, quote, or outgoing payment IDs only if they are testnet/play-money resources.
+      render: text
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Outcome
+      description: What passed, failed, or needs investigation?
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: This report contains testnet/play-money data only.
+          required: true
+        - label: I removed private keys, tokens, interact_ref values, and credentials.
+          required: true

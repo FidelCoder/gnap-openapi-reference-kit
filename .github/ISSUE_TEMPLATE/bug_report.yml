@@ -1,0 +1,75 @@
+name: Bug report
+description: Report a bug in the validator, examples, docs, or live testnet tooling.
+title: "[bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Do not include real credentials, private keys, live tokens, or production payment details.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong?
+      placeholder: The validator reports... / The live dry-run command...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include exact local commands and file paths where possible.
+      placeholder: |
+        1. Run `pnpm test`
+        2. Run `pnpm gnap-openapi validate ...`
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      placeholder: I expected...
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      placeholder: Instead...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Validator
+        - OpenAPI examples
+        - Fixtures
+        - Arazzo workflows
+        - Docs
+        - Optional live testnet examples
+        - Packaging/build
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Node, pnpm, OS, and relevant command output.
+      render: text
+      placeholder: |
+        node --version
+        pnpm --version
+        uname -a
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I did not include real private keys, credentials, tokens, or production payment data.
+          required: true

@@ -1,0 +1,72 @@
+name: Validation rule proposal
+description: Propose a new or changed validator rule.
+title: "[rule]: "
+labels:
+  - validation
+  - enhancement
+body:
+  - type: textarea
+    id: rule
+    attributes:
+      label: Rule summary
+      description: What should the validator check?
+      placeholder: Require...
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Why this rule matters
+      description: Explain the GNAP, OpenAPI, Open Payments, or SDK-readiness reason.
+    validations:
+      required: true
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Proposed severity
+      options:
+        - error
+        - warning
+        - info
+        - unsure
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: Proposed issue code
+      placeholder: MISSING_GNAP_...
+  - type: textarea
+    id: valid
+    attributes:
+      label: Passing example
+      render: yaml
+      placeholder: |
+        openapi: 3.1.0
+        ...
+  - type: textarea
+    id: invalid
+    attributes:
+      label: Failing example
+      render: yaml
+      placeholder: |
+        openapi: 3.1.0
+        ...
+  - type: textarea
+    id: message
+    attributes:
+      label: Suggested message and fix
+      placeholder: |
+        Message:
+        Suggestion:
+  - type: checkboxes
+    id: tests
+    attributes:
+      label: Definition of done
+      options:
+        - label: The rule has focused tests.
+          required: true
+        - label: At least one valid or invalid example demonstrates the behavior.
+          required: true
+        - label: The error or warning is actionable.
+          required: true

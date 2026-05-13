@@ -110,6 +110,46 @@ This fetches public wallet address metadata and prints:
 - `authServer`
 - `resourceServer`
 
+## Only Have One Test Wallet Account?
+
+You can still make progress with one verified Interledger Test Wallet account:
+
+```sh
+pnpm live:check-account
+```
+
+This command validates wallet discovery and developer-key readiness. It does not send a payment and does not require `RECEIVER_WALLET_ADDRESS`.
+
+Use this single-account environment shape:
+
+```sh
+TEST_WALLET_ADDRESS=https://wallet.interledger-test.dev/YOUR_TEST_WALLET
+PRIVATE_KEY=YOUR_PRIVATE_KEY_OR_PATH
+KEY_ID=https://wallet.interledger-test.dev/YOUR_TEST_WALLET/keys/YOUR_KEY_ID
+OPEN_PAYMENTS_TESTNET_ONLY=true
+DRY_RUN=false
+LOG_LEVEL=info
+```
+
+If `TEST_WALLET_ADDRESS` is missing, the command falls back to `SENDER_WALLET_ADDRESS`.
+
+Dry run, with no network calls:
+
+```sh
+DRY_RUN=true OPEN_PAYMENTS_TESTNET_ONLY=true TEST_WALLET_ADDRESS=https://wallet.interledger-test.dev/alice PRIVATE_KEY=placeholder KEY_ID=https://wallet.interledger-test.dev/alice/keys/1 PAYMENT_AMOUNT_VALUE=100 PAYMENT_AMOUNT_ASSET_CODE=USD PAYMENT_AMOUNT_ASSET_SCALE=2 pnpm live:check-account
+```
+
+The readiness report shows:
+
+- wallet metadata reachable
+- developer key configured
+- private key present
+- testnet safety enabled
+- ready for incoming-payment test
+- ready for full payment test
+
+Full payment still requires a second verified receiver wallet. If the second verification email is delayed, check spam/promotions, wait a bit, try another email provider, or use a teammate/test receiver wallet address if one is available.
+
 ## Create Incoming Payment
 
 Dry run:
@@ -175,6 +215,7 @@ The configured redirect URI is `https://client.example/callback`, because this r
 `DRY_RUN=true` validates configuration and prints planned operations.
 
 - `live:inspect-wallet` makes no network calls.
+- `live:check-account` makes no network calls in dry-run mode and does not require a receiver wallet.
 - `live:create-incoming-payment` does not request grants or create resources.
 - `live:send-testnet-payment` does not fetch wallets, request grants, create quotes, create incoming payments, or create outgoing payments.
 

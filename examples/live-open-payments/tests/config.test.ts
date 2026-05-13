@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   getRedactedConfig,
-  loadLiveOpenPaymentsConfig
+  loadLiveOpenPaymentsConfig,
+  loadSingleAccountReadinessConfig
 } from "../src/config.js";
 
 function validEnv(overrides: NodeJS.ProcessEnv = {}): NodeJS.ProcessEnv {
@@ -86,5 +87,35 @@ describe("loadLiveOpenPaymentsConfig", () => {
     });
 
     expect(getRedactedConfig(config).privateKey).toBe("[REDACTED]");
+  });
+});
+
+describe("loadSingleAccountReadinessConfig", () => {
+  it("loads single-account config without requiring a receiver wallet", () => {
+    const config = loadSingleAccountReadinessConfig({
+      env: {
+        TEST_WALLET_ADDRESS: "https://wallet.interledger-test.dev/alice",
+        PRIVATE_KEY: "test-private-key",
+        KEY_ID: "https://wallet.interledger-test.dev/alice/keys/1",
+        OPEN_PAYMENTS_TESTNET_ONLY: "true"
+      },
+      loadDotenvFile: false
+    });
+
+    expect(config.testWalletAddress).toBe("https://wallet.interledger-test.dev/alice");
+    expect(config.receiverWalletAddress).toBeUndefined();
+  });
+
+  it("ignores two-wallet values when TEST_WALLET_ADDRESS selects single-account mode", () => {
+    const config = loadSingleAccountReadinessConfig({
+      env: validEnv({
+        TEST_WALLET_ADDRESS: "https://wallet.interledger-test.dev/test"
+      }),
+      loadDotenvFile: false
+    });
+
+    expect(config.testWalletAddress).toBe("https://wallet.interledger-test.dev/test");
+    expect(config.senderWalletAddress).toBeUndefined();
+    expect(config.receiverWalletAddress).toBeUndefined();
   });
 });

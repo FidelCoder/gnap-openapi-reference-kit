@@ -1,0 +1,58 @@
+name: Feature request
+description: Suggest a scoped improvement to the reference kit.
+title: "[feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project is a GNAP/OpenAPI reference kit, not a production wallet or payment processor. Please keep proposals scoped to reference metadata, validation, examples, docs, or optional testnet demos.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What user, maintainer, reviewer, or SDK implementer need does this address?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the smallest useful change.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - x-gnap vocabulary
+        - x-gnap-access vocabulary
+        - Validation rule
+        - Open Payments example
+        - Fixture
+        - Arazzo workflow
+        - Kiota readiness
+        - Optional live testnet example
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - Example...
+        - Test...
+        - Docs...
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope check
+      options:
+        - label: This does not require production funds, real credentials, or live network access during normal tests.
+          required: true
+        - label: This does not turn the project into a wallet, payment processor, GNAP server, or Kiota fork.
+          required: true

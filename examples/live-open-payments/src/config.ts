@@ -24,6 +24,21 @@ export interface LiveOpenPaymentsConfig {
   logLevel: LiveLogLevel;
 }
 
+export interface SingleAccountReadinessConfig {
+  testWalletAddress?: string;
+  senderWalletAddress?: string;
+  receiverWalletAddress?: string;
+  privateKey: string;
+  keyId: string;
+  safety: {
+    testnetOnly: boolean;
+    allowNonTestnetUrls: boolean;
+    dryRun: boolean;
+    openBrowserOnInteraction: boolean;
+  };
+  logLevel: LiveLogLevel;
+}
+
 export interface LoadConfigOptions {
   env?: NodeJS.ProcessEnv;
   loadDotenvFile?: boolean;
@@ -40,6 +55,11 @@ function readRequired(env: NodeJS.ProcessEnv, name: string, errors: string[]): s
   }
 
   return value;
+}
+
+function readOptional(env: NodeJS.ProcessEnv, name: string): string | undefined {
+  const value = env[name]?.trim();
+  return value ? value : undefined;
 }
 
 function parseBoolean(value: string | undefined): boolean {
@@ -156,6 +176,89 @@ export function loadLiveOpenPaymentsConfig(
       assetCode,
       assetScale
     },
+    safety: {
+      testnetOnly,
+      allowNonTestnetUrls,
+      dryRun,
+      openBrowserOnInteraction
+    },
+    logLevel
+  };
+}
+
+export function loadSingleAccountReadinessConfig(
+  options: LoadConfigOptions = {}
+): SingleAccountReadinessConfig {
+  if (options.loadDotenvFile !== false) {
+    loadDotenv({ path: liveEnvPath, quiet: true });
+  }
+
+  const env = options.env ?? process.env;
+  const errors: string[] = [];
+
+  const testWalletAddress = readOptional(env, "TEST_WALLET_ADDRESS");
+  const senderWalletAddress = testWalletAddress
+    ? undefined
+    : readOptional(env, "SENDER_WALLET_ADDRESS");
+  const receiverWalletAddress = testWalletAddress
+    ? undefined
+    : readOptional(env, "RECEIVER_WALLET_ADDRESS");
+  const privateKey = readRequired(env, "PRIVATE_KEY", errors);
+  const keyId = readRequired(env, "KEY_ID", errors);
+
+  const testnetOnly = parseBoolean(env.OPEN_PAYMENTS_TESTNET_ONLY);
+  const allowNonTestnetUrls = parseBoolean(env.ALLOW_NON_TESTNET_URLS);
+  const dryRun = parseBoolean(env.DRY_RUN);
+  const openBrowserOnInteraction = parseBoolean(env.OPEN_BROWSER_ON_INTERACTION);
+  const logLevel = (env.LOG_LEVEL?.trim().toLowerCase() || "info") as LiveLogLevel;
+
+  if (!testWalletAddress && !senderWalletAddress) {
+    errors.push(
+      "TEST_WALLET_ADDRESS or SENDER_WALLET_ADDRESS is required for pnpm live:check-account."
+    );
+  }
+
+  if (!testnetOnly) {
+    errors.push(
+      "OPEN_PAYMENTS_TESTNET_ONLY must be true. The live examples are testnet-only, play-money-only demos and must not be used for production funds."
+    );
+  }
+
+  if (!["debug", "info", "warn", "error"].includes(logLevel)) {
+    errors.push("LOG_LEVEL must be one of: debug, info, warn, error.");
+  }
+
+  if (testWalletAddress) {
+    validateUrl("TEST_WALLET_ADDRESS", testWalletAddress, errors);
+    validateTestnetUrl("TEST_WALLET_ADDRESS", testWalletAddress, allowNonTestnetUrls, errors);
+  }
+
+  if (senderWalletAddress) {
+    validateUrl("SENDER_WALLET_ADDRESS", senderWalletAddress, errors);
+    validateTestnetUrl("SENDER_WALLET_ADDRESS", senderWalletAddress, allowNonTestnetUrls, errors);
+  }
+
+  if (receiverWalletAddress) {
+    validateUrl("RECEIVER_WALLET_ADDRESS", receiverWalletAddress, errors);
+    validateTestnetUrl("RECEIVER_WALLET_ADDRESS", receiverWalletAddress, allowNonTestnetUrls, errors);
+  }
+
+  if (keyId) {
+    validateUrl("KEY_ID", keyId, errors);
+    validateTestnetUrl("KEY_ID", keyId, allowNonTestnetUrls, errors);
+  }
+
+  if (errors.length > 0) {
+    const redactedErrors = errors.map((error) => redactSecret(error, [privateKey]));
+    throw new Error(`Invalid live Open Payments configuration:\n- ${redactedErrors.join("\n- ")}`);
+  }
+
+  return {
+    testWalletAddress,
+    senderWalletAddress,
+    receiverWalletAddress,
+    privateKey,
+    keyId,
     safety: {
       testnetOnly,
       allowNonTestnetUrls,

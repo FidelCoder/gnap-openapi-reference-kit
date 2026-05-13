@@ -133,6 +133,8 @@ The core validator is deterministic and local-only. It does not make network cal
 
 An optional live testnet layer is available under [`examples/live-open-payments`](examples/live-open-payments/README.md). It uses real Open Payments APIs against Interledger Test Wallet play-money accounts to demonstrate wallet address discovery, GNAP grants, incoming payments, quotes, interactive outgoing-payment approval, grant continuation, and outgoing payment creation.
 
+If you only have one Test Wallet account, run `pnpm live:check-account` before attempting the full two-wallet payment flow.
+
 These live examples are testnet-only and play-money-only. They are not production payment instructions, do not handle real funds, and do not run during normal tests.
 
 ## Documentation
@@ -142,13 +144,14 @@ These live examples are testnet-only and play-money-only. They are not productio
 - [Validation rules](docs/validation-rules.md)
 - [Kiota readiness report](docs/kiota-readiness-report.md)
 - [Design decisions](docs/design-decisions.md)
+- [Project roadmap](docs/roadmap.md)
+- [Demo transcript](docs/demo-transcript.md)
+- [Grant execution proof template](docs/grant-execution-proof.md)
+- [v0.1.0 release checklist](docs/release-checklist-v0.1.0.md)
 
 ## Roadmap
 
-1. Add JSON Schema for `x-gnap` and `x-gnap-access`.
-2. Add more conformance-style fixtures for grants and operation access.
-3. Prototype generated-client auth behavior using Kiota concepts.
-4. Gather feedback from Open Payments, OpenAPI, and SDK implementers.
+See the [project roadmap](docs/roadmap.md) for the public review baseline and candidate follow-up milestones.
 
 ## Non-Goals
 

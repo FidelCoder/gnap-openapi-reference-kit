@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Open Payments documentation
+    url: https://openpayments.dev/
+    about: Use official Open Payments documentation for protocol questions outside this reference kit.
+  - name: Interledger Test Wallet
+    url: https://wallet.interledger-test.dev/
+    about: Use the test wallet for play-money account setup and developer keys.
