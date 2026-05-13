@@ -137,6 +137,16 @@ If you only have one Test Wallet account, run `pnpm live:check-account` before a
 
 These live examples are testnet-only and play-money-only. They are not production payment instructions, do not handle real funds, and do not run during normal tests.
 
+## For Grant Reviewers
+
+Reviewer-oriented materials:
+
+- [Revised grant summary](docs/revised-grant-summary.md)
+- [Grant execution proof](docs/grant-execution-proof.md)
+- [Project roadmap](docs/roadmap.md)
+- [Kiota readiness report](docs/kiota-readiness-report.md)
+- [Optional live Open Payments testnet examples](examples/live-open-payments/README.md)
+
 ## Documentation
 
 - [GNAP OpenAPI extension vocabulary](docs/gnap-openapi-extension-vocabulary.md)

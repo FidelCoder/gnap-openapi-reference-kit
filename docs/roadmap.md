@@ -1,98 +1,107 @@
 # Project Roadmap
 
-This roadmap keeps the project focused on its core thesis: make GNAP-secured Open Payments APIs representable, validatable, and ready for future SDK generation through OpenAPI.
+This roadmap is grant-review oriented. It describes the path from the current reference kit to a stronger review package for GNAP/OpenAPI, Open Payments, Arazzo, and SDK tooling contributors.
 
-The project is experimental. Roadmap items describe reference-kit work, not official OpenAPI, GNAP, Open Payments, or Kiota commitments.
+The project is experimental and does not claim official adoption by OpenAPI, GNAP, Interledger, Open Payments, or Kiota.
 
-## v0.1.0 Public Review Baseline
+## Phase 1: Reference Model And Validator
 
-Status: in progress
+Status: completed
 
-Goals:
+Completed work:
 
-- Ship the TypeScript validator and CLI.
-- Keep validation deterministic and local-only.
-- Provide compact Open Payments OpenAPI examples.
-- Provide invalid examples with actionable diagnostics.
-- Provide local GNAP/Open Payments fixtures.
-- Provide Arazzo workflow examples.
-- Document the proposed `x-gnap` and `x-gnap-access` vocabulary.
-- Provide optional live Interledger Test Wallet demos that are explicitly testnet/play-money only.
-- Provide a single-account readiness path for users who do not yet have a second verified test wallet.
+- Proposed `x-gnap` OpenAPI security-scheme extension.
+- Proposed `x-gnap-access` operation-level extension.
+- TypeScript CLI validator.
+- YAML/JSON parser.
+- Text and JSON reporters.
+- Validation rules for OpenAPI version, GNAP security schemes, grant endpoints, operation access metadata, access types, access actions, and proof methods.
+- Valid and invalid Open Payments examples.
+- Rule tests and validator tests.
 
-Exit criteria:
+Review value:
 
-- `pnpm test` passes without credentials or network.
-- `pnpm build` passes.
-- Valid OpenAPI example passes.
-- Invalid OpenAPI example fails with clear diagnostics.
-- Optional live dry-runs run without network mutation.
-- No real credentials or production payment instructions are committed.
+- Demonstrates that GNAP metadata can be represented and validated in OpenAPI without changing the OpenAPI Specification in the first milestone.
 
-## v0.2.0 Extension Hardening
+## Phase 2: Testnet Harness
 
-Candidate scope:
+Status: completed dry-run, pending full live transaction proof
 
-- Add JSON Schema for `x-gnap`.
-- Add JSON Schema for `x-gnap-access`.
-- Add schema-backed validation while keeping friendly issue messages.
-- Add more invalid examples for malformed extension objects.
-- Add docs explaining how the schema and rule engine relate.
+Completed work:
 
-Non-goals:
+- Optional live Open Payments scripts under `examples/live-open-payments/`.
+- Testnet-only safety enforcement.
+- Dry-run mode for non-mutating request planning.
+- Wallet inspection script.
+- Incoming payment creation script.
+- Full send-testnet-payment script.
+- Single-account readiness script for users with only one verified test wallet.
+- Documentation and demo transcript for expected dry-run/live-run output.
 
-- Do not claim the extension vocabulary is official.
-- Do not replace the rule-based validator with opaque schema errors.
+Pending proof:
 
-## v0.3.0 Open Payments Coverage
+- A completed `DRY_RUN=false` Interledger Test Wallet play-money transaction.
+- Redacted evidence with incoming payment ID, quote ID, outgoing payment ID, status, and wallet history confirmation.
 
-Candidate scope:
+Review value:
 
-- Expand compact examples for wallet-address, incoming-payment, quote, and outgoing-payment variants.
-- Add focused fixtures for grant continuation and interaction-required flows.
-- Add Arazzo workflow checks that operation IDs exist in the referenced OpenAPI examples.
-- Add conformance-style docs pairing operations with expected GNAP access requests.
+- Shows the practical protocol sequence behind the OpenAPI metadata while keeping live network usage optional.
 
-Non-goals:
+## Phase 3: Community Review And Spec Refinement
 
-- Do not mirror the entire official Open Payments specification.
-- Do not implement a production wallet.
+Status: next
 
-## v0.4.0 Kiota Readiness Prototype
+Planned work:
 
-Candidate scope:
+- Gather feedback from Open Payments maintainers, GNAP reviewers, OpenAPI practitioners, and SDK tooling contributors.
+- Refine names and shapes for `x-gnap` and `x-gnap-access`.
+- Add clearer limitations and compatibility notes.
+- Add issue-driven examples for reviewer concerns.
+- Separate stable reference guidance from experimental ideas.
 
-- Document a concrete mapping from `x-gnap-access` to generated client authentication hooks.
-- Prototype a small metadata extractor that emits operation-to-access requirements.
-- Add a sample auth-provider design note for future Kiota work.
-- Add generated-client pseudocode examples without requiring a Kiota fork.
+Review value:
 
-Non-goals:
+- Turns the reference vocabulary into a more credible proposal for wider discussion.
 
-- Do not modify Kiota directly in this repo.
-- Do not generate production SDKs.
+## Phase 4: Kiota-Readiness Research And Auth-Provider Design
 
-## v0.5.0 Live Testnet Evidence Package
+Status: planned
 
-Candidate scope:
+Planned work:
 
-- Stabilize live demo transcripts.
-- Add grant execution proof templates for reviewer evidence.
-- Add redaction guidance for terminal logs and screenshots.
-- Add optional scripts for collecting non-secret testnet IDs into a local report.
+- Expand the Kiota-readiness report into a concrete auth-provider design note.
+- Map `x-gnap-access` metadata to generated operation middleware requirements.
+- Document how grant negotiation, interaction, continuation, and request signing could be surfaced in generated clients.
+- Prototype a metadata extraction output that SDK tools could consume.
 
-Non-goals:
+Non-goal:
 
-- Do not store real tokens or private keys.
-- Do not encourage production or real-money usage.
+- Do not fork or modify Kiota in this phase.
 
-## Backlog
+Review value:
 
-- Add machine-readable validation rule metadata.
-- Add SARIF or GitHub annotation output.
-- Add CLI option to treat warnings as errors.
-- Add docs for integrating the validator into CI.
-- Add OpenAPI examples for multiple GNAP security schemes.
-- Add tests for path-level security inheritance edge cases.
-- Add examples for operation-level security overrides.
-- Add docs for known limitations of HTTP Message Signatures metadata.
+- Gives SDK tooling contributors a precise bridge from OpenAPI metadata to generated-client authorization behavior.
+
+## Phase 5: Arazzo Workflow Expansion And Validation
+
+Status: planned
+
+Planned work:
+
+- Expand Arazzo workflow examples for incoming payment, outgoing payment, donation, and checkout.
+- Validate that workflow operation IDs exist in referenced OpenAPI examples.
+- Add workflow fixtures for interaction-required and continuation paths.
+- Document how Arazzo complements `x-gnap-access` operation metadata.
+
+Review value:
+
+- Shows how multi-step Open Payments flows can be described alongside operation-level GNAP authorization metadata.
+
+## Continuing Principles
+
+- Keep the core validator deterministic and local-only.
+- Keep live network examples optional.
+- Keep examples compact and inspectable.
+- Avoid production payment claims.
+- Avoid real credentials in the repository.
+- Keep errors actionable for API authors.

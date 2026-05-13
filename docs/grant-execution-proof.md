@@ -1,135 +1,110 @@
-# Grant Execution Proof Template
+# Grant Execution Proof
 
-Use this template to document optional Interledger Test Wallet evidence for grant reviewers or maintainers.
+This document summarizes what the repository can prove today and how reviewers can verify it. It is written for Interledger reviewers, Open Payments maintainers, and SDK tooling contributors.
 
-This document is a template. Do not commit real private keys, access tokens, continuation tokens, `interact_ref` values, production wallet details, or real-money payment data.
+The project is experimental. It does not claim official OpenAPI, GNAP, Open Payments, Interledger, or Kiota adoption.
 
-## Safety Statement
+## What Currently Works
 
-- Environment: Interledger Test Wallet testnet
-- Value type: play-money only
-- Production funds used: no
-- Real financial value: no
-- Private keys committed: no
-- Network actions were explicitly invoked by the operator: yes/no
+The repository currently includes:
 
-## Run Metadata
+- TypeScript CLI validator for local OpenAPI YAML and JSON files.
+- Proposed `x-gnap` reference model for GNAP security-scheme metadata.
+- Proposed `x-gnap-access` reference model for operation-level access requirements.
+- Validation rules for OpenAPI version, GNAP security schemes, grant endpoints, operation access metadata, access types, access actions, and proof methods.
+- Valid Open Payments-oriented OpenAPI examples.
+- Invalid OpenAPI examples that intentionally trigger actionable diagnostics.
+- GNAP/Open Payments JSON fixtures for grant and payment flows.
+- Arazzo workflow examples for incoming payment, outgoing payment, donation, and checkout flows.
+- Kiota-readiness documentation describing how future SDK tooling could consume the metadata.
+- Optional live Open Payments testnet execution layer under `examples/live-open-payments/`.
+- Dry-run safety for live examples.
+- Testnet-only enforcement for live examples.
+- Single-account readiness checks for cases where only one Interledger Test Wallet account is verified.
 
-- Date:
-- Operator:
-- Git commit:
-- Node version:
-- pnpm version:
-- Command:
-- Mode: `DRY_RUN=true` or `DRY_RUN=false`
+The core validator remains deterministic and local-only. Normal validation, tests, and builds do not require network access, wallet credentials, private keys, or live Open Payments APIs.
 
-## Configuration Summary
+## Verification Commands
 
-Do not paste secrets.
+Run the local test suite:
 
-- `OPEN_PAYMENTS_TESTNET_ONLY=true`: yes/no
-- `ALLOW_NON_TESTNET_URLS=true`: yes/no
-- Sender wallet address:
-- Receiver wallet address:
-- Single test wallet address, if applicable:
-- Asset code:
-- Asset scale:
-- Amount value:
-- Private key present: yes/no
-- Key ID configured: yes/no
-- Key ID appears to match wallet: yes/no/warn
-
-## Local Validation Evidence
-
-Paste output:
-
-```text
+```sh
 pnpm test
 ```
 
-Paste output:
+Run the TypeScript build:
 
-```text
+```sh
 pnpm build
 ```
 
-Paste output:
+Validate the main valid Open Payments example:
 
-```text
+```sh
 pnpm gnap-openapi validate examples/valid/openpayments-gnap.yaml
 ```
 
-Paste output:
+Validate an intentionally invalid example:
 
-```text
+```sh
 pnpm gnap-openapi validate examples/invalid/missing-access-metadata.yaml
 ```
 
-The invalid example should fail with `MISSING_GNAP_ACCESS`.
+Expected result: the invalid example fails with `MISSING_GNAP_ACCESS`.
 
-## Single-Account Readiness Evidence
+## Optional Live Dry-Run Verification
 
-Command:
+These commands validate the optional live harness without creating grants, payments, quotes, or outgoing payments.
 
-```sh
-pnpm live:check-account
-```
-
-Paste redacted output:
-
-```text
-
-```
-
-Readiness results:
-
-- Wallet metadata reachable: yes/no
-- Testnet safety enabled: yes/no
-- Private key present: yes/no
-- KEY_ID configured: yes/no
-- KEY_ID matches wallet: pass/warn/fail
-- Ready for incoming-payment test: likely yes/no
-- Ready for full payment test: likely yes/no
-
-## Incoming Payment Evidence
-
-Command:
+Inspect wallet planning:
 
 ```sh
-pnpm live:create-incoming-payment
+DRY_RUN=true OPEN_PAYMENTS_TESTNET_ONLY=true SENDER_WALLET_ADDRESS=https://wallet.interledger-test.dev/alice RECEIVER_WALLET_ADDRESS=https://wallet.interledger-test.dev/bob PRIVATE_KEY=placeholder KEY_ID=https://wallet.interledger-test.dev/alice/keys/1 PAYMENT_AMOUNT_VALUE=100 PAYMENT_AMOUNT_ASSET_CODE=USD PAYMENT_AMOUNT_ASSET_SCALE=2 pnpm live:inspect-wallet
 ```
 
-Paste redacted output:
-
-```text
-
-```
-
-Returned testnet values:
-
-- Receiver wallet address:
-- Resource server:
-- Incoming payment ID:
-- Incoming amount:
-- Expires at:
-- Grant/access token value redacted: yes
-
-## Full Payment Evidence
-
-Command:
+Create incoming payment planning:
 
 ```sh
-pnpm live:send-testnet-payment
+DRY_RUN=true OPEN_PAYMENTS_TESTNET_ONLY=true SENDER_WALLET_ADDRESS=https://wallet.interledger-test.dev/alice RECEIVER_WALLET_ADDRESS=https://wallet.interledger-test.dev/bob PRIVATE_KEY=placeholder KEY_ID=https://wallet.interledger-test.dev/alice/keys/1 PAYMENT_AMOUNT_VALUE=100 PAYMENT_AMOUNT_ASSET_CODE=USD PAYMENT_AMOUNT_ASSET_SCALE=2 pnpm live:create-incoming-payment
 ```
 
-Paste redacted output:
+Full payment planning:
 
-```text
-
+```sh
+DRY_RUN=true OPEN_PAYMENTS_TESTNET_ONLY=true SENDER_WALLET_ADDRESS=https://wallet.interledger-test.dev/alice RECEIVER_WALLET_ADDRESS=https://wallet.interledger-test.dev/bob PRIVATE_KEY=placeholder KEY_ID=https://wallet.interledger-test.dev/alice/keys/1 PAYMENT_AMOUNT_VALUE=100 PAYMENT_AMOUNT_ASSET_CODE=USD PAYMENT_AMOUNT_ASSET_SCALE=2 pnpm live:send-testnet-payment
 ```
 
-Returned testnet values:
+Single-account readiness planning:
 
+```sh
+DRY_RUN=true OPEN_PAYMENTS_TESTNET_ONLY=true TEST_WALLET_ADDRESS=https://wallet.interledger-test.dev/alice PRIVATE_KEY=placeholder KEY_ID=https://wallet.interledger-test.dev/alice/keys/1 PAYMENT_AMOUNT_VALUE=100 PAYMENT_AMOUNT_ASSET_CODE=USD PAYMENT_AMOUNT_ASSET_SCALE=2 pnpm live:check-account
+```
+
+## Honesty Note
+
+Dry-run outputs prove that the live harness validates configuration, enforces testnet-only safety, redacts secrets, and plans the expected Open Payments/GNAP request sequence.
+
+Dry-run outputs are not proof of a completed testnet payment.
+
+A completed testnet payment should be documented with:
+
+- Incoming payment ID.
+- Quote ID.
+- Outgoing payment ID.
+- Outgoing payment status.
+- Asset details.
+- Redacted terminal output.
+- Confirmation from Interledger Test Wallet history.
+
+Do not commit private keys, access tokens, continuation tokens, `interact_ref` values, approval URLs, or production payment data.
+
+## Completed Testnet Payment Evidence Template
+
+Use this section only after running `DRY_RUN=false` with Interledger Test Wallet play-money accounts.
+
+- Date:
+- Git commit:
+- Command:
 - Sender wallet address:
 - Receiver wallet address:
 - Incoming payment ID:
@@ -138,23 +113,19 @@ Returned testnet values:
 - Outgoing payment status:
 - Requested receive amount:
 - Quoted debit amount:
-- Test Wallet UI/history confirms play-money movement: yes/no
+- Test Wallet history checked: yes/no
+- Private keys/tokens redacted: yes/no
+- Notes:
 
-## Redaction Checklist
+## Reviewer Interpretation
 
-Before sharing this proof, confirm:
+The current evidence is sufficient to inspect:
 
-- Private key removed.
-- Access token values removed.
-- Continuation token values removed.
-- `interact_ref` removed.
-- Approval URL removed or sanitized.
-- Any personal account names removed if needed.
-- Only testnet/play-money resource IDs remain.
+- How GNAP metadata can be represented in OpenAPI.
+- How Open Payments operations map to GNAP access requirements.
+- How invalid specs are detected.
+- How fixtures model grant/payment flows.
+- How Arazzo can describe multi-step Open Payments workflows.
+- What Kiota-like SDK tooling would need in order to consume this metadata later.
 
-## Reviewer Notes
-
-- What did this run prove?
-- What failed or needs follow-up?
-- Any issue links:
-- Any screenshots stored outside Git:
+The remaining live proof gap is a documented full testnet payment run with returned testnet IDs and wallet history confirmation.
